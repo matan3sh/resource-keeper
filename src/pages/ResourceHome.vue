@@ -5,23 +5,26 @@
       <div class="col-md-4 order-md-2 mb-4">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-muted">Your Resources</span>
-          <span class="badge badge-secondary badge-pill">6</span>
+          <span class="badge badge-secondary badge-pill">{{
+            resourcesLength
+          }}</span>
         </h4>
         <resource-search />
         <resource-list :resources="resources" />
+        <button @click="addResource" class="btn btn-sm btn-primary">
+          Add Resource
+        </button>
       </div>
-      <!-- {/* Update Form Starts */} -->
-      <!-- {/* <div class="col-md-8 order-md-1">
-        <h4 class="mb-3">Resource</h4>
-        <resource-update />
-      </div> */}
-      {/* Update Form Ends */} -->
-      <!-- {/* Detail View Starts */} -->
       <div class="col-md-8 order-md-1">
-        <h4 class="mb-3">Resource</h4>
-        <resource-detail />
+        <h4 class="mb-3">
+          Resource
+          <button @click="toggleView" :class="`btn btn-sm ${toggleBtnClass}`">
+            {{ isDetailView ? 'Update' : 'Detail' }}
+          </button>
+        </h4>
+        <resource-detail v-if="isDetailView" />
+        <resource-update v-else />
       </div>
-      <!-- {/* Detail View Ends */} -->
     </div>
   </div>
 </template>
@@ -30,18 +33,19 @@
 import ResourceHeader from '@/components/ResourceHeader';
 import ResourceSearch from '@/components/ResourceSearch';
 import ResourceList from '@/components/ResourceList';
-// import ResourceUpdate from '@/components/ResourceUpdate';
+import ResourceUpdate from '@/components/ResourceUpdate';
 import ResourceDetail from '@/components/ResourceDetail';
 export default {
   components: {
     ResourceHeader,
     ResourceSearch,
     ResourceList,
-    // ResourceUpdate,
+    ResourceUpdate,
     ResourceDetail,
   },
   data() {
     return {
+      isDetailView: true,
       resources: [
         {
           _id: '1',
@@ -66,6 +70,35 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    resourcesLength() {
+      return this.resources.length;
+    },
+    toggleBtnClass() {
+      return this.isDetailView ? 'btn-warning' : 'btn-primary';
+    },
+  },
+  methods: {
+    toggleView() {
+      this.isDetailView = !this.isDetailView;
+    },
+    addResource() {
+      const _id =
+        '_' +
+        Math.random()
+          .toString(36)
+          .slice(2);
+      const type = ['book', 'blog', 'video'][Math.floor(Math.random() * 3)];
+      const newResource = {
+        _id,
+        title: `Resource ${_id} Title`,
+        description: `Resource ${_id} Description`,
+        link: '',
+        type,
+      };
+      this.resources.unshift(newResource);
+    },
   },
 };
 </script>
