@@ -10,19 +10,23 @@
           }}</span>
         </h4>
         <resource-search />
-        <resource-list :resources="resources" />
+        <resource-list
+          @on-item-click="selectResource"
+          :resources="resources"
+          :activeId="activeResource?._id"
+        />
         <button @click="addResource" class="btn btn-sm btn-primary">
           Add Resource
         </button>
       </div>
       <div class="col-md-8 order-md-1">
         <h4 class="mb-3">
-          Resource
+          Resource {{ activeResource?._id }}
           <button @click="toggleView" :class="`btn btn-sm ${toggleBtnClass}`">
             {{ isDetailView ? 'Update' : 'Detail' }}
           </button>
         </h4>
-        <resource-detail v-if="isDetailView" />
+        <resource-detail v-if="isDetailView" :resource="activeResource" />
         <resource-update v-else />
       </div>
     </div>
@@ -35,6 +39,7 @@ import ResourceSearch from '@/components/ResourceSearch';
 import ResourceList from '@/components/ResourceList';
 import ResourceUpdate from '@/components/ResourceUpdate';
 import ResourceDetail from '@/components/ResourceDetail';
+
 export default {
   components: {
     ResourceHeader,
@@ -46,6 +51,7 @@ export default {
   data() {
     return {
       isDetailView: true,
+      selectedResource: null,
       resources: [
         {
           _id: '1',
@@ -78,6 +84,16 @@ export default {
     toggleBtnClass() {
       return this.isDetailView ? 'btn-warning' : 'btn-primary';
     },
+    hasResources() {
+      return this.resourcesLength > 0;
+    },
+    activeResource() {
+      return (
+        this.selectedResource ||
+        (this.hasResources && this.resources[0]) ||
+        null
+      );
+    },
   },
   methods: {
     toggleView() {
@@ -98,6 +114,10 @@ export default {
         type,
       };
       this.resources.unshift(newResource);
+    },
+    selectResource(selectedResource) {
+      // TODO: it's copied by reference!!!
+      this.selectedResource = selectedResource;
     },
   },
 };

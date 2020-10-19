@@ -4,6 +4,8 @@
       :resource="resource"
       v-for="resource in resources"
       :key="resource._id"
+      @click="onItemClick(resource)"
+      :activeId="activeId"
     />
   </ul>
 </template>
@@ -16,6 +18,13 @@ export default {
     resources: {
       type: Array,
       default: () => [],
+    },
+    activeId: String,
+  },
+  emit: ['on-item-click'],
+  methods: {
+    onItemClick(resource) {
+      this.$emit('on-item-click', resource);
     },
   },
 };
