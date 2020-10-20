@@ -8,3 +8,12 @@ export const fetchResources = async () => {
     console.log(error);
   }
 };
+
+export const updateResource = async (id, resource) => {
+  try {
+    const { data } = await axios.patch(`/api/resources/${id}`, resource);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
