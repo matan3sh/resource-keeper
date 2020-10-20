@@ -1,6 +1,10 @@
 import axios from 'axios';
 
 export const fetchResources = async () => {
-  const { data } = await axios.get('/api/resources');
-  return data;
+  try {
+    const { data } = await axios.get('/api/resources');
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
