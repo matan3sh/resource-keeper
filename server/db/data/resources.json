@@ -1,7 +1,7 @@
 [
   {
     "_id": "1",
-    "title": "Form validation with Next.js/React part 2",
+    "title": "Form validation with Next.js/React part 1",
     "description": "Learn how to validate custom input components with 'react hook form'",
     "link": "https://www.youtube.com/watch?v=fm_UA4_0XBE",
     "type": "video"
