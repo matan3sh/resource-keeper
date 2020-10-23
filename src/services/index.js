@@ -14,6 +14,6 @@ export const updateResource = async (id, resource) => {
     const { data } = await axios.patch(`/api/resources/${id}`, resource);
     return data;
   } catch (error) {
-    console.log(error);
+    return Promise.reject(error?.response?.data);
   }
 };

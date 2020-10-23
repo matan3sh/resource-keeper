@@ -69,11 +69,19 @@ export default {
       updateResource: { ...this.resource },
       types: ['blog', 'video', 'book'],
       alert: this.initAlert(),
+      timeoutId: null,
     };
   },
   emits: ['on-resource-update'],
+  beforeUnmount() {
+    this.clearAlertTimeout();
+  },
   watch: {
-    resource(newResource) {
+    resource(newResource, previousResource) {
+      if (newResource && newResource._id !== previousResource._id) {
+        this.clearAlertTimeout();
+        this.alert = this.initAlert();
+      }
       this.updateResource = { ...newResource };
     },
   },
@@ -81,9 +89,15 @@ export default {
     initAlert() {
       return { success: null, error: null };
     },
+    clearAlertTimeout() {
+      this.timeoutId && clearTimeout(this.timeoutId);
+    },
     setAlert(type, message) {
       this.alert = this.initAlert();
       this.alert[type] = message;
+      this.timeoutId = setTimeout(() => {
+        this.alert = this.initAlert();
+      }, 2000);
     },
     async submitForm() {
       try {
@@ -94,7 +108,7 @@ export default {
         this.$emit('on-resource-update', updatedResource);
         this.setAlert('success', 'Resource was updated!');
       } catch (error) {
-        this.setAlert('error', error?.message);
+        this.setAlert('error', error);
       }
     },
   },
