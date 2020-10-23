@@ -25,15 +25,17 @@
         placeholder="Just some description"
       ></textarea>
     </div>
-    <!-- <div class="mb-3">
-      <label htmlFor="type">Type</label>
-      <input
-        type="text"
-        class="form-control"
-        id="email"
-        placeholder="Very interesting book"
-      />
-    </div> -->
+    <div class="mb-3">
+      <label htmlFor="link">Type</label>
+      <select class="form-control" id="link" v-model="updateResource.type">
+        <option
+          v-for="resourceType in types"
+          :key="resourceType"
+          :value="resourceType"
+          >{{ resourceType }}</option
+        >
+      </select>
+    </div>
     <div class="mb-3">
       <label htmlFor="username">Resource Link</label>
       <div class="input-group">
