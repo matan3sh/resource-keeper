@@ -22,15 +22,22 @@
       <div class="col-md-8 order-md-1">
         <h4 class="mb-3">
           Resource {{ activeResource?._id }}
-          <button @click="toggleView" :class="`btn btn-sm ${toggleBtnClass}`">
+          <button
+            @click="toggleView"
+            :class="`btn btn-sm ${toggleBtnClass} mr-2`"
+          >
             {{ isDetailView ? 'Update' : 'Detail' }}
           </button>
+          <resource-delete
+            :activeId="activeResource?._id"
+            @on-resource-delete="hydrateResources($event, 'delete')"
+          />
         </h4>
         <resource-detail v-if="isDetailView" :resource="activeResource" />
         <resource-update
           v-else
           :resource="activeResource"
-          @on-resource-update="hydrateResources"
+          @on-resource-update="hydrateResources($event, 'update')"
         />
       </div>
     </div>
@@ -43,6 +50,7 @@ import ResourceSearch from '@/components/ResourceSearch';
 import ResourceList from '@/components/ResourceList';
 import ResourceUpdate from '@/components/ResourceUpdate';
 import ResourceDetail from '@/components/ResourceDetail';
+import ResourceDelete from '@/components/RecourceDelete';
 import { fetchResources } from '@/services';
 
 export default {
@@ -52,6 +60,7 @@ export default {
     ResourceList,
     ResourceUpdate,
     ResourceDetail,
+    ResourceDelete,
   },
   data() {
     return {
@@ -106,11 +115,18 @@ export default {
       // TODO: it's copied by reference!!!
       this.selectedResource = selectedResource;
     },
-    hydrateResources(newResource) {
-      this.resources = this.resources.map((resource) =>
-        resource._id === newResource._id ? newResource : resource
-      );
-      this.selectResource(newResource);
+    hydrateResources(newResource, operation = 'update') {
+      if (operation === 'update') {
+        this.resources = this.resources.map((resource) =>
+          resource._id === newResource._id ? newResource : resource
+        );
+        this.selectResource(newResource);
+      } else {
+        this.resources = this.resources.filter(
+          (resource) => resource._id !== newResource._id
+        );
+        this.selectResource(this.resources[0] || null);
+      }
     },
   },
 };

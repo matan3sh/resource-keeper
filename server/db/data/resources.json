@@ -1,14 +1,7 @@
 [
   {
-    "_id": "1",
-    "title": "Form validation with Next.js/React part !",
-    "description": "Learn how to validate custom input components with 'react hook form'",
-    "link": "https://www.youtube.com/watch?v=fm_UA4_0XBE",
-    "type": "video"
-  },
-  {
     "_id": "2",
-    "title": "Updated Title !",
+    "title": "Updated Title",
     "description": "Some Desc UPDATE ",
     "link": "https://eincode.com/blogs/learn-how-to-validate-custom-input-components-with-react-hook-form",
     "type": "blog"

@@ -59,6 +59,7 @@
 
 <script>
 import { updateResource } from '@/services';
+import alertMixin from '@/mixins/alert';
 
 export default {
   props: {
@@ -68,10 +69,9 @@ export default {
     return {
       updateResource: { ...this.resource },
       types: ['blog', 'video', 'book'],
-      alert: this.initAlert(),
-      timeoutId: null,
     };
   },
+  mixins: [alertMixin],
   emits: ['on-resource-update'],
   beforeUnmount() {
     this.clearAlertTimeout();
@@ -86,19 +86,6 @@ export default {
     },
   },
   methods: {
-    initAlert() {
-      return { success: null, error: null };
-    },
-    clearAlertTimeout() {
-      this.timeoutId && clearTimeout(this.timeoutId);
-    },
-    setAlert(type, message) {
-      this.alert = this.initAlert();
-      this.alert[type] = message;
-      this.timeoutId = setTimeout(() => {
-        this.alert = this.initAlert();
-      }, 2000);
-    },
     async submitForm() {
       try {
         const updatedResource = await updateResource(
