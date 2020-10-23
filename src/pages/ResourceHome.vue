@@ -15,23 +15,25 @@
           :resources="resources"
           :activeId="activeResource?._id"
         />
-        <button @click="addResource" class="btn btn-sm btn-primary">
-          Add Resource
-        </button>
       </div>
       <div class="col-md-8 order-md-1">
         <h4 class="mb-3">
           Resource {{ activeResource?._id }}
-          <button
-            @click="toggleView"
-            :class="`btn btn-sm ${toggleBtnClass} mr-2`"
-          >
-            {{ isDetailView ? 'Update' : 'Detail' }}
-          </button>
-          <resource-delete
-            :activeId="activeResource?._id"
-            @on-resource-delete="hydrateResources($event, 'delete')"
-          />
+          <template v-if="hasResources">
+            <button
+              @click="toggleView"
+              :class="`btn btn-sm ${toggleBtnClass} mr-2`"
+            >
+              {{ isDetailView ? 'Update' : 'Detail' }}
+            </button>
+            <resource-delete
+              :activeId="activeResource?._id"
+              @on-resource-delete="
+                hydrateResources($event, 'delete');
+                !hasResources ? (isDetailView = true) : null;
+              "
+            />
+          </template>
         </h4>
         <resource-detail v-if="isDetailView" :resource="activeResource" />
         <resource-update
@@ -94,22 +96,6 @@ export default {
   methods: {
     toggleView() {
       this.isDetailView = !this.isDetailView;
-    },
-    addResource() {
-      const _id =
-        '_' +
-        Math.random()
-          .toString(36)
-          .slice(2);
-      const type = ['book', 'blog', 'video'][Math.floor(Math.random() * 3)];
-      const newResource = {
-        _id,
-        title: `Resource ${_id} Title`,
-        description: `Resource ${_id} Description`,
-        link: '',
-        type,
-      };
-      this.resources.unshift(newResource);
     },
     selectResource(selectedResource) {
       // TODO: it's copied by reference!!!
